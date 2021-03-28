@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 //import com.user.account.entity.Transactions;
 import com.user.account.entity.User;
-import com.user.account.repo.RepoLayer;
-//import com.user.account.repo.TransactionRepoLayerInFace;
+import com.user.account.repositories.UserRepository;
+//import com.user.account.repositories.TransactionRepoLayerInFace;
 
 @Service
 public class AccountServiceClass implements AccountServices {

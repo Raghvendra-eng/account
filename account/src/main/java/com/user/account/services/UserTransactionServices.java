@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.user.account.entity.Transactions;
-import com.user.account.repo.TransactionRepoLayerInFace;
+import com.user.account.repositories.TransactionRepoLayerInFace;
 
 @Service
 public class UserTransactionServices implements TransactionServices {
