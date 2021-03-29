@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.user.account.entity.User;
 import com.user.account.entity.Transactions;
-import com.user.account.services.AccountServices;
-import com.user.account.services.TransactionServices;
+import com.user.account.services.AccountService;
+import com.user.account.services.TransactionService;
 
 
 
@@ -21,10 +21,10 @@ public class AllControlers {
 	
 	
 		@Autowired
-		private AccountServices accountServices;
+		private AccountService accountService;
 		
 		@Autowired
-		private TransactionServices transactionServices;
+		private TransactionService transactionService;
 		
 		// tomcat test
 		@GetMapping("/home")
@@ -38,7 +38,7 @@ public class AllControlers {
 		@PostMapping("/debit/{accountNumber}")
 		public User debit(@PathVariable String accountNumber, @RequestBody String amount) {
 			
-			User user = this.accountServices.getUser(Long.parseLong(accountNumber));
+			User user = accountService.getUser(Long.parseLong(accountNumber));
 			
 			if ( Long.parseLong(amount) <= user.getAccountBalance() ) {
 				
@@ -46,9 +46,9 @@ public class AllControlers {
 				
 				Transactions newTransaction = new Transactions(user.getAccountNumber(), Long.parseLong(amount), "debit");
 				
-				this.transactionServices.addTransaction(newTransaction);
+				transactionService.addTransaction(newTransaction);
 				
-				return this.accountServices.updateUser(user);
+				return accountService.updateUser(user);
 			}
 			
 			else 
@@ -60,15 +60,15 @@ public class AllControlers {
 		@PostMapping("/credit/{accountNumber}")
 		public User credit(@PathVariable String accountNumber, @RequestBody String amount) {
 				
-			User user = this.accountServices.getUser(Long.parseLong(accountNumber));
+			User user = accountService.getUser(Long.parseLong(accountNumber));
 				
 			user.incrementAccountBalance(Long.parseLong(amount)) ;
 				
 			Transactions newTransaction = new Transactions(user.getAccountNumber(), Long.parseLong(amount), "credit");
 				
-			this.transactionServices.addTransaction(newTransaction);
+			transactionService.addTransaction(newTransaction);
 				
-			return this.accountServices.updateUser(user);
+			return accountService.updateUser(user);
 				
 		}
 		
