@@ -41,7 +41,7 @@ public class User {
 		this.name = name;
 	}
 
-	public void updateBalanceBy( double amount) {
+	public void incrementAccountBalance( double amount) {
 		this.accountBalance = this.accountBalance + amount; 
 	}
 	

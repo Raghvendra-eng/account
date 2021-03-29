@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.user.account.entity.Transactions;
 
-public interface TransactionRepoLayerInFace extends JpaRepository<Transactions, Long>{
+public interface TransactionRepository extends JpaRepository<Transactions, Long>{
 	@Query
 	public ArrayList< Transactions> findByAccountNumber(long accountNumber);
 }

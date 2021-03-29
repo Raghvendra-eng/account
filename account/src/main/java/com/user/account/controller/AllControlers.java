@@ -42,7 +42,7 @@ public class AllControlers {
 			
 			if ( Long.parseLong(amount) <= user.getAccountBalance() ) {
 				
-				user.updateBalanceBy(-Long.parseLong(amount)) ;
+				user.incrementAccountBalance(-Long.parseLong(amount)) ;
 				
 				Transactions newTransaction = new Transactions(user.getAccountNumber(), Long.parseLong(amount), "debit");
 				
@@ -62,13 +62,13 @@ public class AllControlers {
 				
 			User user = this.accountServices.getUser(Long.parseLong(accountNumber));
 				
-				user.updateBalanceBy(Long.parseLong(amount)) ;
+			user.incrementAccountBalance(Long.parseLong(amount)) ;
 				
-				Transactions newTransaction = new Transactions(user.getAccountNumber(), Long.parseLong(amount), "credit");
+			Transactions newTransaction = new Transactions(user.getAccountNumber(), Long.parseLong(amount), "credit");
 				
-				this.transactionServices.addTransaction(newTransaction);
+			this.transactionServices.addTransaction(newTransaction);
 				
-				return this.accountServices.updateUser(user);
+			return this.accountServices.updateUser(user);
 				
 		}
 		
