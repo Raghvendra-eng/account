@@ -17,13 +17,11 @@ public class UserTransactionServices implements TransactionServices {
 	
 	@Override
 	public Transactions addTransaction(Transactions newTransaction) {
-		// TODO Auto-generated method stub
 		return transactionVari.save(newTransaction);
 	}
 
 	@Override
 	public ArrayList<Transactions> getSummary(long accountNumber) {
-		// TODO Auto-generated method stub
 		return transactionVari.findByAccountNumber(accountNumber);
 	}
 
