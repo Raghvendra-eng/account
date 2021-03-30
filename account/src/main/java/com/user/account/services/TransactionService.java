@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.user.account.entity.Transactions;
 
-public interface TransactionServices {
+public interface TransactionService {
 	
 	public Transactions addTransaction(Transactions newTransaction);
 	

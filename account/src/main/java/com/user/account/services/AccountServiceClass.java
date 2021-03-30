@@ -7,20 +7,20 @@ import org.springframework.stereotype.Service;
 import com.user.account.entity.User;
 import com.user.account.repositories.UserRepository;
 @Service
-public class AccountServiceClass implements AccountServices {
+public class AccountServiceClass implements AccountService {
 
 	@Autowired
-	private RepoLayer repoLayerVari;
+	private UserRepository userRepository;
 	
 	
 	@Override
 	public User updateUser(User user) {
-		return  repoLayerVari.save(user);
+		return  userRepository.save(user);
 	}
 
 	@Override
 	public User getUser(long accountNumber) {
-		return repoLayerVari.getOne(accountNumber);
+		return userRepository.getOne(accountNumber);
 	}
 
 

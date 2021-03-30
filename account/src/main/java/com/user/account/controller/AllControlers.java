@@ -36,15 +36,19 @@ public class AllControlers {
 		
 		
 		@PostMapping("/debit/{accountNumber}")
-		public User debit(@PathVariable String accountNumber, @RequestBody String amount) {
+		public User debit(@PathVariable String accountNumber, @RequestBody String amount) throws Exception {
+
+			long userAccountNumber = Long.parseLong(accountNumber);
+
+			long debitAmount = Long.parseLong(amount);
 			
-			User user = accountService.getUser(Long.parseLong(accountNumber));
+			User user = accountService.getUser(userAccountNumber);
 			
-			if ( Long.parseLong(amount) <= user.getAccountBalance() ) {
+			if ( debitAmount <= user.getAccountBalance() ) {
 				
-				user.incrementAccountBalance(-Long.parseLong(amount)) ;
+				user.incrementAccountBalance(-debitAmount) ;
 				
-				Transactions newTransaction = new Transactions(user.getAccountNumber(), Long.parseLong(amount), "debit");
+				Transactions newTransaction = new Transactions(userAccountNumber, Long.parseLong(amount), "debit");
 				
 				transactionService.addTransaction(newTransaction);
 				
@@ -58,13 +62,17 @@ public class AllControlers {
 		// Updating accountBalance after credit
 		
 		@PostMapping("/credit/{accountNumber}")
-		public User credit(@PathVariable String accountNumber, @RequestBody String amount) {
+		public User credit(@PathVariable String accountNumber, @RequestBody String amount) throws Exception{
+
+			long userAccountNumber = Long.parseLong(accountNumber);
+
+			long creditAmount = Long.parseLong(amount);
+
+			User user = accountService.getUser(userAccountNumber);
 				
-			User user = accountService.getUser(Long.parseLong(accountNumber));
+			user.incrementAccountBalance(creditAmount) ;
 				
-			user.incrementAccountBalance(Long.parseLong(amount)) ;
-				
-			Transactions newTransaction = new Transactions(user.getAccountNumber(), Long.parseLong(amount), "credit");
+			Transactions newTransaction = new Transactions(userAccountNumber, Long.parseLong(amount), "credit");
 				
 			transactionService.addTransaction(newTransaction);
 				
@@ -78,6 +86,6 @@ public class AllControlers {
 		
 		public ArrayList < Transactions > transactionSummary(@PathVariable String accountNumber){
 			
-			return this.transactionServices.getSummary(Long.parseLong(accountNumber));
+			return transactionService.getSummary(Long.parseLong(accountNumber));
 		}
 }

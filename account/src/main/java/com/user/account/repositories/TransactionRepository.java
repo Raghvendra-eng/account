@@ -1,4 +1,4 @@
-package com.user.account.repo;
+package com.user.account.repositories;
 
 import java.util.ArrayList;
 
