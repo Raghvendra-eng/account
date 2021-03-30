@@ -4,8 +4,17 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Table (name ="transactions" )
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter 
+@Setter
 public class Transactions {
 	
 	@Id
@@ -23,28 +32,4 @@ public class Transactions {
 		this.amount = amount;
 		this.transactionType = transactionType;
 	}
-	
-	public Transactions() {
-		
-	}
-	
-	public long getAccountNumber() {
-		return accountNumber;
-	}
-	public void setAccountNumber(long accountNumber) {
-		this.accountNumber = accountNumber;
-	}
-	public long getAmount() {
-		return amount;
-	}
-	public void setAmount(long amount) {
-		this.amount = amount;
-	}
-	public String getTransactionType() {
-		return transactionType;
-	}
-	public void setTransactionType(String transactionType) {
-		this.transactionType = transactionType;
-	}
-	
 }
