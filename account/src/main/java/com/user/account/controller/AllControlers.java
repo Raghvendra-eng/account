@@ -14,7 +14,21 @@ import com.user.account.entity.Transactions;
 import com.user.account.services.AccountService;
 import com.user.account.services.TransactionService;
 
-
+enum TransactionType{
+	DEBIT("Debit"),
+	CREDIT("Credit");
+	
+	private final String transactionType;
+	
+	TransactionType(final String transactionType){
+		this.transactionType = transactionType;
+	}
+	
+	@Override
+	public String toString() {
+		return transactionType;
+	}
+}
 
 @RestController
 public class AllControlers {
@@ -36,7 +50,7 @@ public class AllControlers {
 		
 		
 		@PostMapping("/debit/{accountNumber}")
-		public User debit(@PathVariable String accountNumber, @RequestBody String amount) throws Exception {
+		public void debit(@PathVariable String accountNumber, @RequestBody String amount) {
 
 			long userAccountNumber = Long.parseLong(accountNumber);
 
@@ -48,15 +62,13 @@ public class AllControlers {
 				
 				user.incrementAccountBalance(-debitAmount) ;
 				
-				Transactions newTransaction = new Transactions(userAccountNumber, Long.parseLong(amount), "debit");
+				Transactions newTransaction = 
+						new Transactions(userAccountNumber, Long.parseLong(amount), TransactionType.DEBIT.toString());
 				
 				transactionService.addTransaction(newTransaction);
 				
-				return accountService.updateUser(user);
+				accountService.updateUser(user);
 			}
-			
-			else 
-				return user;
 		}
 		
 		// Updating accountBalance after credit
@@ -72,7 +84,8 @@ public class AllControlers {
 				
 			user.incrementAccountBalance(creditAmount) ;
 				
-			Transactions newTransaction = new Transactions(userAccountNumber, Long.parseLong(amount), "credit");
+			Transactions newTransaction = 
+					new Transactions(userAccountNumber, Long.parseLong(amount), TransactionType.CREDIT.toString());
 				
 			transactionService.addTransaction(newTransaction);
 				
