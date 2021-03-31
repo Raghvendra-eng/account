@@ -8,5 +8,5 @@ public interface TransactionService {
 	
 	public Transactions addTransaction(Transactions newTransaction);
 	
-	public ArrayList< Transactions> getSummary(long accountNumber);
+	public ArrayList< Transactions> getSummary(Long accountNumber);
 }

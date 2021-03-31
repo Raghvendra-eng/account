@@ -19,7 +19,7 @@ public class AccountServiceClass implements AccountService {
 	}
 
 	@Override
-	public User getUser(long accountNumber) {
+	public User getUser(Long accountNumber) {
 		return userRepository.getOne(accountNumber);
 	}
 

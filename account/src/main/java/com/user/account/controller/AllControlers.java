@@ -3,6 +3,9 @@ package com.user.account.controller;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,26 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.user.account.entity.User;
+import com.user.account.message.DefaultMessage;
 import com.user.account.entity.Transactions;
 import com.user.account.services.AccountService;
 import com.user.account.services.TransactionService;
 
-enum TransactionType{
-	DEBIT("Debit"),
-	CREDIT("Credit");
-	
-	private final String transactionType;
-	
-	TransactionType(final String transactionType){
-		this.transactionType = transactionType;
-	}
-	
-	@Override
-	public String toString() {
-		return transactionType;
-	}
-}
-
+@Validated
 @RestController
 public class AllControlers {
 	
@@ -50,46 +39,46 @@ public class AllControlers {
 		
 		
 		@PostMapping("/debit/{accountNumber}")
-		public void debit(@PathVariable String accountNumber, @RequestBody String amount) {
-
-			long userAccountNumber = Long.parseLong(accountNumber);
-
-			long debitAmount = Long.parseLong(amount);
+		public ResponseEntity<String> debit(@PathVariable Long accountNumber, @RequestBody Long amount) {
 			
-			User user = accountService.getUser(userAccountNumber);
+			User user = accountService.getUser(accountNumber);
 			
-			if ( debitAmount <= user.getAccountBalance() ) {
+			if ( amount.compareTo(user.getAccountBalance()) <= 0 ) {
 				
-				user.incrementAccountBalance(-debitAmount) ;
+				user.incrementAccountBalance(-amount) ;
 				
 				Transactions newTransaction = 
-						new Transactions(userAccountNumber, Long.parseLong(amount), TransactionType.DEBIT.toString());
+						new Transactions(accountNumber, amount, DefaultMessage.DEBIT);
 				
 				transactionService.addTransaction(newTransaction);
 				
 				accountService.updateUser(user);
+				
+				return new ResponseEntity<>(DefaultMessage.TRANSACTION_SUCCESS, HttpStatus.OK);
+			}
+			
+			else {
+				return new ResponseEntity<>(DefaultMessage.TRANSACTION_FAILED, HttpStatus.OK);
 			}
 		}
 		
 		// Updating accountBalance after credit
 		
 		@PostMapping("/credit/{accountNumber}")
-		public User credit(@PathVariable String accountNumber, @RequestBody String amount) throws Exception{
+		public ResponseEntity<String> credit(@PathVariable Long accountNumber, @RequestBody Long amount) throws Exception{
 
-			long userAccountNumber = Long.parseLong(accountNumber);
-
-			long creditAmount = Long.parseLong(amount);
-
-			User user = accountService.getUser(userAccountNumber);
+			User user = accountService.getUser(accountNumber);
 				
-			user.incrementAccountBalance(creditAmount) ;
+			user.incrementAccountBalance(amount) ;
 				
 			Transactions newTransaction = 
-					new Transactions(userAccountNumber, Long.parseLong(amount), TransactionType.CREDIT.toString());
+					new Transactions(accountNumber, amount, DefaultMessage.CREDIT);
 				
 			transactionService.addTransaction(newTransaction);
 				
-			return accountService.updateUser(user);
+			accountService.updateUser(user);
+			
+			return new ResponseEntity<>(DefaultMessage.TRANSACTION_SUCCESS, HttpStatus.OK);
 				
 		}
 		
@@ -97,8 +86,8 @@ public class AllControlers {
 		
 		@GetMapping("/getSummary/{accountNumber}")
 		
-		public ArrayList < Transactions > transactionSummary(@PathVariable String accountNumber){
+		public ArrayList < Transactions > transactionSummary(@PathVariable Long accountNumber){
 			
-			return transactionService.getSummary(Long.parseLong(accountNumber));
+			return transactionService.getSummary(accountNumber);
 		}
 }

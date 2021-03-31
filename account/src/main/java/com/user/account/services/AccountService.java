@@ -6,5 +6,5 @@ public interface AccountService {
 	
 	public User updateUser(User user);
 	
-	public User getUser(long accountNumber);
+	public User getUser(Long accountNumber);
 }

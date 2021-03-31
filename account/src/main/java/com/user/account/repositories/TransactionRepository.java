@@ -9,5 +9,5 @@ import com.user.account.entity.Transactions;
 
 public interface TransactionRepository extends JpaRepository<Transactions, Long>{
 	@Query
-	public ArrayList< Transactions> findByAccountNumber(long accountNumber);
+	public ArrayList< Transactions> findByAccountNumber(Long accountNumber);
 }

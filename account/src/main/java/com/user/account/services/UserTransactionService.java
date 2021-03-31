@@ -21,7 +21,7 @@ public class UserTransactionService implements TransactionService {
 	}
 
 	@Override
-	public ArrayList<Transactions> getSummary(long accountNumber) {
+	public ArrayList<Transactions> getSummary(Long accountNumber) {
 		return transactionRepository.findByAccountNumber(accountNumber);
 	}
 
