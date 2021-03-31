@@ -21,73 +21,79 @@ import com.user.account.services.TransactionService;
 @Validated
 @RestController
 public class AllControlers {
-	
-	
-		@Autowired
-		private AccountService accountService;
-		
-		@Autowired
-		private TransactionService transactionService;
-		
-		// tomcat test
-		@GetMapping("/home")
-		public String home() {
-			return "This is the home page";
-		}
-		
-		// Updating accountBalance after debit
-		
-		
-		@PostMapping("/debit/{accountNumber}")
-		public ResponseEntity<String> debit(@PathVariable Long accountNumber, @RequestBody Long amount) {
-			
-			User user = accountService.getUser(accountNumber);
-			
-			if ( amount.compareTo(user.getAccountBalance()) <= 0 ) {
-				
-				user.incrementAccountBalance(-amount) ;
-				
-				Transactions newTransaction = 
-						new Transactions(accountNumber, amount, DefaultMessage.DEBIT);
-				
-				transactionService.addTransaction(newTransaction);
-				
-				accountService.updateUser(user);
-				
-				return new ResponseEntity<>(DefaultMessage.TRANSACTION_SUCCESS, HttpStatus.OK);
-			}
-			
-			else {
-				return new ResponseEntity<>(DefaultMessage.TRANSACTION_FAILED, HttpStatus.OK);
-			}
-		}
-		
-		// Updating accountBalance after credit
-		
-		@PostMapping("/credit/{accountNumber}")
-		public ResponseEntity<String> credit(@PathVariable Long accountNumber, @RequestBody Long amount) throws Exception{
+
+
+	@Autowired
+	private AccountService accountService;
+
+	@Autowired
+	private TransactionService transactionService;
+
+	// tomcat test
+	@GetMapping("/home")
+	public String home() {
+		return "This is the home page";
+	}
+
+	// Updating accountBalance after debit
+
+
+	@PostMapping("/debit/{accountNumber}")
+	public ResponseEntity<String> debit(@PathVariable Long accountNumber, @RequestBody String transactionAmount) {
+		try {
 
 			User user = accountService.getUser(accountNumber);
-				
+			Long amount = Long.parseLong(transactionAmount);
+			if ( amount.compareTo(user.getAccountBalance()) <= 0 ) {
+				user.incrementAccountBalance(-amount) ;
+				Transactions newTransaction = 
+						new Transactions(accountNumber, amount, DefaultMessage.DEBIT);
+				transactionService.addTransaction(newTransaction);
+				accountService.updateUser(user);
+				return new ResponseEntity<>(DefaultMessage.TRANSACTION_SUCCESS, HttpStatus.OK);
+			}
+
+			else {
+				return new ResponseEntity<>(DefaultMessage.TRANSACTION_FAILED_LOW_BALANCE, HttpStatus.BAD_REQUEST);
+			}
+			
+		}
+		catch (NumberFormatException exception) {
+
+			return new ResponseEntity<>(DefaultMessage.TRANSACTION_FAILED_INVALID_AMOUNT, HttpStatus.BAD_REQUEST);
+		
+		}
+	}
+
+	// Updating accountBalance after credit
+
+	@PostMapping("/credit/{accountNumber}")
+	public ResponseEntity<String> credit(@PathVariable Long accountNumber, @RequestBody String transactionAmount) throws Exception{
+		try {
+		
+			User user = accountService.getUser(accountNumber);
+			Long amount = Long.parseLong(transactionAmount);
 			user.incrementAccountBalance(amount) ;
-				
 			Transactions newTransaction = 
 					new Transactions(accountNumber, amount, DefaultMessage.CREDIT);
-				
 			transactionService.addTransaction(newTransaction);
-				
 			accountService.updateUser(user);
-			
 			return new ResponseEntity<>(DefaultMessage.TRANSACTION_SUCCESS, HttpStatus.OK);
-				
+		
 		}
+		catch (NumberFormatException exception) {
+
+			return new ResponseEntity<>(DefaultMessage.TRANSACTION_FAILED_INVALID_AMOUNT, HttpStatus.BAD_REQUEST);
 		
-		// GetSummary for transactions in an account
-		
-		@GetMapping("/getSummary/{accountNumber}")
-		
-		public ArrayList < Transactions > transactionSummary(@PathVariable Long accountNumber){
-			
-			return transactionService.getSummary(accountNumber);
 		}
+	}
+
+	// GetSummary for transactions in an account
+
+	@GetMapping("/getSummary/{accountNumber}")
+
+	public ArrayList < Transactions > transactionSummary(@PathVariable Long accountNumber){
+
+		return transactionService.getSummary(accountNumber);
+	}
 }
