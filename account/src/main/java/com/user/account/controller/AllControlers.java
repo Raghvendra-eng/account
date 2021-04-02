@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import javax.validation.constraints.Size;
 
 import com.user.account.entity.User;
 import com.user.account.message.DefaultMessage;
@@ -29,17 +30,13 @@ public class AllControlers {
 	@Autowired
 	private TransactionService transactionService;
 
-	// tomcat test
-	@GetMapping("/home")
-	public String home() {
-		return "This is the home page";
-	}
-
 	// Updating accountBalance after debit
 
 
 	@PostMapping("/debit/{accountNumber}")
-	public ResponseEntity<String> debit(@PathVariable Long accountNumber, @RequestBody String transactionAmount) {
+	public ResponseEntity<String> debit(
+			@PathVariable @Size(10) Long accountNumber, 
+			@RequestBody String transactionAmount) {
 		try {
 
 			User user = accountService.getUser(accountNumber);
