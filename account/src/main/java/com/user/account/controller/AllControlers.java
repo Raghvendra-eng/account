@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-//import javax.validation.constraints.Size;
 
 import com.user.account.entity.User;
 import com.user.account.message.DefaultMessage;
@@ -33,7 +32,6 @@ public class AllControlers {
     @Autowired
     private TransactionService transactionService;
 
-    // Updating accountBalance after debit
     public ResponseEntity<String> CreditAndDebitRequest(Long accountNumber, String transactionAmount, String transactionType){
         try {
             User user = accountService.getUser(accountNumber);
@@ -70,6 +68,8 @@ public class AllControlers {
         }
     }
 
+    // Updating accountBalance after debit
+
     @PostMapping("/debit/{accountNumber}")
     public ResponseEntity<String> debit(@PathVariable @Min(1) Long accountNumber, @RequestBody String transactionAmount) {
         return CreditAndDebitRequest(accountNumber, transactionAmount, DefaultMessage.DEBIT);
@@ -78,7 +78,7 @@ public class AllControlers {
     // Updating accountBalance after credit
 
     @PostMapping("/credit/{accountNumber}")
-    public ResponseEntity<String> credit(@PathVariable Long accountNumber, @RequestBody String transactionAmount) throws Exception{
+    public ResponseEntity<String> credit(@PathVariable @Min(1) Long accountNumber, @RequestBody String transactionAmount) throws Exception{
         return CreditAndDebitRequest(accountNumber, transactionAmount, DefaultMessage.CREDIT);
     }
 
@@ -86,7 +86,7 @@ public class AllControlers {
 
     @GetMapping("/getSummary/{accountNumber}")
 
-    public ArrayList < Transactions > transactionSummary(@PathVariable Long accountNumber){
+    public ArrayList < Transactions > transactionSummary(@PathVariable @Min(1) Long accountNumber){
         return transactionService.getSummary(accountNumber);
     }
 }
