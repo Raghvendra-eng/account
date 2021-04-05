@@ -23,6 +23,7 @@ import javax.validation.constraints.Min;
 
 @Validated
 @RestController
+@RequestMapping("/api")
 public class AllControlers {
 
 
