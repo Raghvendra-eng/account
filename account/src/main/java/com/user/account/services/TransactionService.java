@@ -1,12 +1,12 @@
 package com.user.account.services;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.user.account.entity.Transactions;
 
 public interface TransactionService {
-	
-	public Transactions addTransaction(Transactions newTransaction);
-	
-	public ArrayList< Transactions> getSummary(Long accountNumber);
+
+    public Transactions addTransaction(Transactions newTransaction);
+
+    public List<Transactions> getSummary(Long accountNumber);
 }
