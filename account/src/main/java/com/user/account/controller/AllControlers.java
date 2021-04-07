@@ -79,7 +79,7 @@ public class AllControlers {
 
     @GetMapping("/getSummary/{accountNumber}")
 
-    public ArrayList < Transactions > transactionSummary(@PathVariable @Min(1) Long accountNumber){
+    public List < Transactions > transactionSummary(@PathVariable @Min(1) Long accountNumber){
         return transactionService.getSummary(accountNumber);
     }
 }
