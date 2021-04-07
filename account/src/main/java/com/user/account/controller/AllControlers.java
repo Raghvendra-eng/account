@@ -6,11 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.user.account.entity.User;
 import com.user.account.message.DefaultMessage;
@@ -23,7 +19,7 @@ import javax.validation.constraints.Min;
 
 @Validated
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/")
 public class AllControlers {
 
 
@@ -32,11 +28,9 @@ public class AllControlers {
 
     @Autowired
     private TransactionService transactionService;
-
-    public ResponseEntity<String> CreditAndDebitRequest(Long accountNumber, String transactionAmount, String transactionType){
+    public ResponseEntity<String> CreditAndDebitRequest(Long accountNumber, Long amount, String transactionType){
         try {
             User user = accountService.getUser(accountNumber);
-            Long amount = Long.parseLong(transactionAmount);
             if(transactionType.equals(DefaultMessage.DEBIT) ) {
                 if ( amount.compareTo(user.getAccountBalance()) <= 0){
                     user.incrementAccountBalance(-amount);
@@ -69,17 +63,15 @@ public class AllControlers {
         }
     }
 
-    // Updating accountBalance after debit
-
     @PostMapping("/debit/{accountNumber}")
-    public ResponseEntity<String> debit(@PathVariable @Min(1) Long accountNumber, @RequestBody String transactionAmount) {
+    public ResponseEntity<String> debit(@PathVariable @Min(1) Long accountNumber, @RequestParam @Min(1) Long transactionAmount) {
         return CreditAndDebitRequest(accountNumber, transactionAmount, DefaultMessage.DEBIT);
     }
 
     // Updating accountBalance after credit
 
     @PostMapping("/credit/{accountNumber}")
-    public ResponseEntity<String> credit(@PathVariable @Min(1) Long accountNumber, @RequestBody String transactionAmount) throws Exception{
+    public ResponseEntity<String> credit(@PathVariable @Min(1) Long accountNumber, @RequestParam @Min(1) Long transactionAmount) throws Exception{
         return CreditAndDebitRequest(accountNumber, transactionAmount, DefaultMessage.CREDIT);
     }
 
