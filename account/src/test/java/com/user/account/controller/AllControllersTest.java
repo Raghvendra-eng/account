@@ -1,11 +1,13 @@
 package com.user.account.controller;
 
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.user.account.services.AccountService;
 import com.user.account.services.TransactionService;
+import org.junit.After;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -45,10 +47,9 @@ public class AllControllersTest {
 
 		User inputUser = new User(2, 1200, "Shyam");
 		User outputUser = new User(2, 1100, "Shyam");
-		Transactions inputTransaction = new Transactions(1,1,100, "debit");
+		Transactions inputTransaction = new Transactions(1,100, "debit");
         String uri = UriComponentsBuilder.newInstance().path("/debit/2")
                 .build().toUri().toString();
-        //{accountNumber}
 		Mockito.when(accountServices.getUser(2L)).thenReturn(inputUser);
 		Mockito.when(accountServices.updateUser(inputUser)).thenReturn(outputUser);
 		Mockito.when(transactionServices.addTransaction(inputTransaction)).thenReturn(inputTransaction);
@@ -80,5 +81,11 @@ public class AllControllersTest {
 		String url = "/getSummary/2";
 		mockMvc.perform(get(url)).andExpect(status().isOk());
 
+	}
+
+	@After
+	public void tearDown() {
+		verifyNoMoreInteractions(accountServices);
+		verifyNoMoreInteractions(transactionServices);
 	}
 }

@@ -17,14 +17,14 @@ public class User {
     @Id
     @GeneratedValue
     private long accountNumber;
-
     private long accountBalance;
-
     private String name;
 
     public void incrementAccountBalance( long amount) {
         accountBalance = accountBalance + amount;
     }
 
-
+    public void decrementAccountBalance( long amount) {
+        accountBalance = accountBalance - amount;
+    }
 }

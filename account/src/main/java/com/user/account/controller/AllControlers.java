@@ -35,7 +35,7 @@ public class AllControlers {
     public ResponseEntity<String> debit(@PathVariable @Min(1) Long accountNumber, @RequestParam @Min(1) Long amount) throws CustomExceptions {
         User user = accountService.getUser(accountNumber);
         if ( amount.compareTo(user.getAccountBalance()) <= 0){
-            user.incrementAccountBalance(-amount);
+            user.decrementAccountBalance(amount);
             Transactions newTransaction =
                     new Transactions(accountNumber, amount, DefaultMessage.DEBIT);
             transactionService.addTransaction(newTransaction);
@@ -62,7 +62,6 @@ public class AllControlers {
     // GetSummary for transactions in an account
 
     @GetMapping("/getSummary/{accountNumber}")
-
     public List< Transactions > transactionSummary(@PathVariable @Min(1) Long accountNumber) throws CustomExceptions {
         return transactionService.getSummary(accountNumber);
     }
