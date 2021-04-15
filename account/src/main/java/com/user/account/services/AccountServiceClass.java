@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.user.account.entity.User;
 import com.user.account.repositories.UserRepository;
+
 @Service
 public class AccountServiceClass implements AccountService {
 
     @Autowired
     private UserRepository userRepository;
-
-
+    
     @Override
     public User updateUser(User user) {
         return  userRepository.save(user);
@@ -24,7 +24,4 @@ public class AccountServiceClass implements AccountService {
             throw new CustomExceptions(DefaultMessage.INVALID_ACCOUNT_NUMBER);
         return userRepository.getOne(accountNumber);
     }
-
-
-
 }
