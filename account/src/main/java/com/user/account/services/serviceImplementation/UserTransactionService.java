@@ -1,4 +1,4 @@
-package com.user.account.services;
+package com.user.account.services.serviceImplementation;
 
 import java.util.List;
 import com.user.account.advice.CustomExceptions;

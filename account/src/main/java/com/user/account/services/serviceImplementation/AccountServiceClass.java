@@ -1,4 +1,4 @@
-package com.user.account.services;
+package com.user.account.services.serviceImplementation;
 
 import com.user.account.advice.CustomExceptions;
 import com.user.account.message.DefaultMessage;
