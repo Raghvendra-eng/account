@@ -1,5 +1,4 @@
 package com.user.account.controller;
-
 import java.util.List;
 import com.user.account.advice.CustomExceptions;
 import com.user.account.entity.FundTransferDetails;
@@ -14,6 +13,7 @@ import com.user.account.entity.Transactions;
 import com.user.account.services.AccountService;
 import com.user.account.services.TransactionService;
 import javax.validation.constraints.Min;
+import static com.user.account.dataValidation.TransactionUsersAndAmountValidation.transactionUsersAndAmountValidation;
 
 @Validated
 @RestController
@@ -25,7 +25,7 @@ public class AllControllers {
 
     @Autowired
     private TransactionService transactionService;
-    
+
     //Send the response to the user based on transaction status
     public ResponseEntity<String> transactionResponse(boolean transactionStatus){
         if(transactionStatus)
@@ -59,6 +59,10 @@ public class AllControllers {
     // Fund Transfer from one Account to another
     @PostMapping("/transaction")
     public ResponseEntity<String> fundTransfer(@RequestBody FundTransferDetails fundTransferDetails) throws CustomExceptions {
+        if(fundTransferDetails.getDebitUserAccountNumber().equals(fundTransferDetails.getCreditUserAccountNumber()))
+            return new ResponseEntity<>(DefaultMessage.INVALID_TRANSACTION_USERS, HttpStatus.BAD_REQUEST);
+        if(!transactionUsersAndAmountValidation(fundTransferDetails))
+            return new ResponseEntity<>(DefaultMessage.INVALID_FUND_TRANSFER_DETAILS, HttpStatus.BAD_REQUEST);
         User debitedUser = accountService.getUser(fundTransferDetails.getDebitUserAccountNumber());
         User creditedUser = accountService.getUser(fundTransferDetails.getCreditUserAccountNumber());
         boolean transactionStatus = transactionService.fundTransferService(debitedUser, creditedUser, fundTransferDetails.getTransactionAmount());

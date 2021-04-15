@@ -1,5 +1,7 @@
 package com.user.account.advice;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.user.account.message.DefaultMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,16 @@ public class AllControllerExceptionHandler {
     @ExceptionHandler(value = CustomExceptions.class)
     public ResponseEntity<String> userNotFoundException(CustomExceptions c){
         return new ResponseEntity<>(c.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = InvalidFormatException.class)
+    public ResponseEntity<String> invalidJSON(){
+        return new ResponseEntity<>(DefaultMessage.JSON_PARSE_EXCEPTION, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = JsonParseException.class)
+    public ResponseEntity<String> invalidParseJSON(){
+        return new ResponseEntity<>(DefaultMessage.JSON_PARSE_EXCEPTION, HttpStatus.BAD_REQUEST);
     }
 
 }
