@@ -7,6 +7,6 @@ public class DefaultMessage {
     public final static String TRANSACTION_FAILED_LOW_BALANCE = "Transaction Failed due to Low Account Balance";
     public final static String TRANSACTION_FAILED_INVALID_AMOUNT = "Transaction Failed due to Invalid Amount";
     public final static String VALIDATION_FAILED = "Invalid Input";
-    public final static String INVALID_ACCOUNT_NUMBER = "Invalid Account Number";
+    public final static String INVALID_ACCOUNT_NUMBER = "Invalid Account Number or No transaction available";
 
 }
