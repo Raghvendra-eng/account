@@ -1,6 +1,6 @@
 package com.user.account.controller;
 import java.util.List;
-import com.user.account.advice.CustomExceptions;
+import com.user.account.advice.UserNotFoundException;
 import com.user.account.entity.FundTransferDetails;
 import com.user.account.message.DefaultMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class AllControllers {
     private TransactionService transactionService;
 
     //Send the response to the user based on transaction status
-    public ResponseEntity<String> transactionResponse(boolean transactionStatus){
+    private ResponseEntity<String> transactionResponse(boolean transactionStatus){
         if(transactionStatus)
             return new ResponseEntity<>(DefaultMessage.TRANSACTION_SUCCESS, HttpStatus.OK);
         else
@@ -36,7 +36,7 @@ public class AllControllers {
 
     // Updating accountBalance after debit
     @PostMapping("/debit/{accountNumber}")
-    public ResponseEntity<String> debit(@PathVariable @Min(1) Long accountNumber, @RequestParam @Min(1) Long amount) throws CustomExceptions {
+    public ResponseEntity<String> debit(@PathVariable @Min(1) Long accountNumber, @RequestParam @Min(1) Long amount) throws UserNotFoundException {
         User user = accountService.getUser(accountNumber);
         boolean transactionStatus = transactionService.debitService(user, amount);
         return transactionResponse(transactionStatus);
@@ -44,7 +44,7 @@ public class AllControllers {
 
     // Updating accountBalance after credit
     @PostMapping("/credit/{accountNumber}")
-    public ResponseEntity<String> credit(@PathVariable @Min(1) Long accountNumber, @RequestParam @Min(1) Long amount) throws CustomExceptions {
+    public ResponseEntity<String> credit(@PathVariable @Min(1) Long accountNumber, @RequestParam @Min(1) Long amount) throws UserNotFoundException {
         User user = accountService.getUser(accountNumber);
         boolean transactionStatus = transactionService.creditService(user, amount);
         return transactionResponse(transactionStatus);
@@ -52,13 +52,13 @@ public class AllControllers {
 
     // GetSummary for transactions in an account
     @GetMapping("/getSummary/{accountNumber}")
-    public List< Transactions > transactionSummary(@PathVariable @Min(1) Long accountNumber) throws CustomExceptions {
+    public List< Transactions > transactionSummary(@PathVariable @Min(1) Long accountNumber) throws UserNotFoundException {
         return transactionService.getSummary(accountNumber);
     }
 
     // Fund Transfer from one Account to another
     @PostMapping("/transaction")
-    public ResponseEntity<String> fundTransfer(@RequestBody FundTransferDetails fundTransferDetails) throws CustomExceptions {
+    public ResponseEntity<String> fundTransfer(@RequestBody FundTransferDetails fundTransferDetails) throws UserNotFoundException {
         if(fundTransferDetails.getDebitUserAccountNumber().equals(fundTransferDetails.getCreditUserAccountNumber()))
             return new ResponseEntity<>(DefaultMessage.INVALID_TRANSACTION_USERS, HttpStatus.BAD_REQUEST);
         if(!transactionUsersAndAmountValidation(fundTransferDetails))

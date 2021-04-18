@@ -19,12 +19,12 @@ public class AllControllerExceptionHandler {
 
     @ExceptionHandler(value = ConstraintViolationException.class)
     public ResponseEntity<String> validationErrorFound(){
-        return new ResponseEntity<>(DefaultMessage.VALIDATION_FAILED, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(DefaultMessage.VALIDATION_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(value = CustomExceptions.class)
-    public ResponseEntity<String> userNotFoundException(CustomExceptions c){
-        return new ResponseEntity<>(c.getMessage(), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(value = UserNotFoundException.class)
+    public ResponseEntity<String> userNotFoundException(UserNotFoundException c){
+        return new ResponseEntity<>(c.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(value = InvalidFormatException.class)

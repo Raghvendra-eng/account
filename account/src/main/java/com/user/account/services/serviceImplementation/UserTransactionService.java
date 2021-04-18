@@ -1,7 +1,7 @@
 package com.user.account.services.serviceImplementation;
 
 import java.util.List;
-import com.user.account.advice.CustomExceptions;
+import com.user.account.advice.UserNotFoundException;
 import com.user.account.entity.User;
 import com.user.account.message.DefaultMessage;
 import com.user.account.services.AccountService;
@@ -28,9 +28,9 @@ public class UserTransactionService implements TransactionService {
     }
 
     @Override
-    public List<Transactions> getSummary(Long accountNumber) throws CustomExceptions {
+    public List<Transactions> getSummary(Long accountNumber) throws UserNotFoundException {
         if(!transactionRepository.existsById(accountNumber))
-            throw new CustomExceptions(DefaultMessage.INVALID_ACCOUNT_NUMBER);
+            throw new UserNotFoundException(DefaultMessage.INVALID_ACCOUNT_NUMBER);
         return transactionRepository.findByAccountNumber(accountNumber);
     }
 
