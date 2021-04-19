@@ -26,7 +26,11 @@ public class AllControllers {
     @Autowired
     private TransactionService transactionService;
 
-    //Send the response to the user based on transaction status
+    /**
+     * Send the response to the user based on transaction status
+     * @param transactionStatus true/ false based on transaction succeed or failed
+     * @return HTTP response Entity
+     */
     private ResponseEntity<String> transactionResponse(boolean transactionStatus){
         if(transactionStatus)
             return new ResponseEntity<>(DefaultMessage.TRANSACTION_SUCCESS, HttpStatus.OK);
@@ -34,7 +38,13 @@ public class AllControllers {
             return new ResponseEntity<>(DefaultMessage.TRANSACTION_FAILED_LOW_BALANCE, HttpStatus.BAD_REQUEST);
     }
 
-    // Updating accountBalance after debit
+    /**
+     * Updating accountBalance after debit
+     * @param accountNumber User Account Number
+     * @param amount Debit Amount
+     * @return HTTP response Entity
+     * @throws UserNotFoundException If account number is not valid
+     */
     @PostMapping("/debit/{accountNumber}")
     public ResponseEntity<String> debit(@PathVariable @Min(1) Long accountNumber, @RequestParam @Min(1) Long amount) throws UserNotFoundException {
         User user = accountService.getUser(accountNumber);
@@ -42,7 +52,13 @@ public class AllControllers {
         return transactionResponse(transactionStatus);
     }
 
-    // Updating accountBalance after credit
+    /**
+     * Updating accountBalance after credit
+     * @param accountNumber User Account Number
+     * @param amount    Credit Amount
+     * @return HTTP response Entity
+     * @throws UserNotFoundException If account number is not valid
+     */
     @PostMapping("/credit/{accountNumber}")
     public ResponseEntity<String> credit(@PathVariable @Min(1) Long accountNumber, @RequestParam @Min(1) Long amount) throws UserNotFoundException {
         User user = accountService.getUser(accountNumber);
@@ -50,13 +66,23 @@ public class AllControllers {
         return transactionResponse(transactionStatus);
     }
 
-    // GetSummary for transactions in an account
+    /**
+     * GetSummary for transactions in an account
+     * @param accountNumber User Account Number
+     * @return HTTP response Entity
+     * @throws UserNotFoundException If account number is not valid
+     */
     @GetMapping("/getSummary/{accountNumber}")
     public List< Transactions > transactionSummary(@PathVariable @Min(1) Long accountNumber) throws UserNotFoundException {
         return transactionService.getSummary(accountNumber);
     }
 
-    // Fund Transfer from one Account to another
+    /**
+     * Fund Transfer from one Account to another
+     * @param fundTransferDetails JSON file containing Users Details and transaction amount
+     * @return HTTP response Entity
+     * @throws UserNotFoundException If account number is not valid
+     */
     @PostMapping("/transaction")
     public ResponseEntity<String> fundTransfer(@RequestBody FundTransferDetails fundTransferDetails) throws UserNotFoundException {
         if(fundTransferDetails.getDebitUserAccountNumber().equals(fundTransferDetails.getCreditUserAccountNumber()))
