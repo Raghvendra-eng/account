@@ -23,14 +23,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	runtimeOnly 'mysql:mysql-connector-java'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	compile group: 'org.mockito', name: 'mockito-core', version: '3.6.28' // JUnit dependencies
+	testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.6.28' // JUnit dependencies
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.junit.jupiter:junit-jupiter:5.7.1')
 	testImplementation('junit:junit:4.13')
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
     	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
